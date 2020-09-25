@@ -10,16 +10,21 @@
         <Button Content="Simulate new value" Height="23" HorizontalAlignment="Left" Name="button1" VerticalAlignment="Top" Width="108" Click="button1_Click" />
         <Ellipse Height="300" Width="300" Name="dial" StrokeThickness="10" StrokeStartLineCap="Round" Stroke="#FF6F6F70" Fill="#14000000"></Ellipse>
         <Path Name="needle" StrokeThickness="2" Width="130" Height="10" HorizontalAlignment="Center" Data="M1,1 L1,10 L156,6 z" Stretch="Fill" RenderTransformOrigin="0,0.5" Margin="165,148,35,148" Fill="#FFC00000" 
-        Tag="{Binding AngleValue, UpdateSourceTrigger=PropertyChanged,NotifyOnTargetUpdated=True}">
+        Tag="{Binding AngleValue, UpdateSourceTrigger=PropertyChanged,NotifyOnTargetUpdated=True}"><!--Not firmiliar with tags but this seems to allow binding to the property and tells it to listen
+                                                                                                       for the property changed even-->
             <Path.RenderTransform>
-                <RotateTransform Angle="{Binding AngleValue}" CenterX="0" CenterY="0"/>
+                <RotateTransform Angle="{Binding AngleValue}" CenterX="0" CenterY="0"/><!--This sets what kind of transformation (rotate) and what property to apply it to (the angle)-->
             </Path.RenderTransform>
             <Path.Triggers>
-                <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                <EventTrigger RoutedEvent="Binding.TargetUpdated"><!--This tells what event should fire the animation. When the bound property is updated
+                                                                      or basically when it fires its property changed event)-->
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation 
-                                Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)" Duration="0:0:2" DecelerationRatio="0.3" AccelerationRatio="0.5"/>
+                            <!--This is the animation and what it is to target. Points to the RenderTransform => RotateTransform => Angle property -->
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" Duration="0:0:3" DecelerationRatio="0.3" AccelerationRatio="0.5"/><!--lasts 3 seconds
+                                                                                                                                                                                    accelerates for half the                                                                                                                                    total time (3 / 0.5 = 1.5s)
+                                                                                                                                                                                    decelerates the last 30%                                                                                                                                  of timespan (3 / 0.3 =0.9s)-->
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
