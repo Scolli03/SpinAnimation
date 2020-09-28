@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -48,7 +49,17 @@ namespace SpinAnimation
 
             //this part is wierd, i was trying to set it so it always 
             //makes at lease one revolution but this is not always true
-            vm.AngleValue = rnd.Next(3600);
+
+            float newAngle;
+
+            do
+            {
+                newAngle = (float)(rnd.Next(3600) * Math.PI);
+            }
+            while (newAngle < 360 & newAngle < (vm.AngleValue + 360) & newAngle < (vm.AngleValue - 360) );
+
+            vm.AngleValue = newAngle;
+            
         }
 
         /// <summary>
@@ -56,11 +67,26 @@ namespace SpinAnimation
         /// </summary>
         class VM : INotifyPropertyChanged
         {
+            private string duration = "0:0:5";
+
+            public string Duration
+            {
+                get
+                {
+                    return this.duration;
+                }
+                set
+                {
+                    this.duration = value;
+                    RaisePropertyChanged("Duration");
+                }
+            }
+
             //private backing field
-            private int angleValue;
+            private float angleValue;
 
             //public property
-            public int AngleValue
+            public float AngleValue
             {
                 get
                 {
@@ -76,8 +102,9 @@ namespace SpinAnimation
                 }
             }
 
-            //event handler for property changed
             public event PropertyChangedEventHandler PropertyChanged;
+
+
 
             //method that uses the PropertyChanged even to determine if the
             //proptery did in fact change and notifies if it has
